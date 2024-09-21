@@ -89,7 +89,12 @@ const runTika = async (filepath, _commandOption, options) => {
     const maxBuffer = (options && options.maxBuffer) || 1024 * 2000;
     const commandOption = _commandOption || 'html';
     const command = 'java';
-    const commandArgs = ['-jar', `${constants.DIRECTORY.VENDOR + constants.VENDOR_TIKA_JAR}`, `--${commandOption}`, filepath];
+    const commandArgs = ['-jar', `${constants.DIRECTORY.VENDOR + constants.VENDOR_TIKA_JAR}`, `--${commandOption}`];
+
+    if(options?.password)
+        commandArgs.push(`--password="${options.password}"`)
+    
+    commandArgs.push(filepath)
     return executeCommand(command, commandArgs, { maxBuffer });
 };
 
