@@ -7,26 +7,36 @@ const gm = require('gm').subClass({ imageMagick: true });
 const { spawn } = require('child_process');
 const constants = require('./constants');
 
+class InvalidPasswordException extends Error {}
+class UnableProcessException extends Error {}
+
 const executeCommand = async (command, args, options = {}) => {
     const child = spawn(command, args, { ...options });
     return new Promise((resolve, reject) => {
         debug(`Executing command: ${command} ${args.join(' ')} with options: ${JSON.stringify(options)}`);
 
         let stdout = '';
-        // let stderr = '';
+        let stderr = '';
 
         child.stdout.on('data', (data) => {
             stdout += data.toString();
         });
 
-        // child.stderr.on('data', function(data) {
-        //   stderr += data.toString();
-        // });
+        child.stderr.on('data', function(data) {
+          stderr += data.toString();
+        });
 
         child.on('close', (code, signal) => {
-            if (code !== 0) {
-                reject(new Error(`${command} ${args.join(' ')} failed with exit code ${code} with signal ${signal}. Please check your console.`));
+
+            if(code !== 0){
+
+                if(stderr.includes('InvalidPasswordException'))
+                    reject(new InvalidPasswordException('InvalidPasswordException'))
+                else
+                    reject(new UnableProcessException(`${command} ${args.join(' ')} failed with exit code ${code} with signal ${signal}. Please check your console.`))
+                
                 return;
+
             }
 
             // if (stderr && stderr.length > 0) {
@@ -139,3 +149,4 @@ exports.pages = pages;
 exports.text = text;
 exports.meta = meta;
 exports.thumbnail = thumbnail;
+exports.errors = { InvalidPasswordException, UnableProcessException }
