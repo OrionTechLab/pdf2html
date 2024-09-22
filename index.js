@@ -7,8 +7,18 @@ const gm = require('gm').subClass({ imageMagick: true });
 const { spawn } = require('child_process');
 const constants = require('./constants');
 
-class InvalidPasswordException extends Error {}
-class UnableProcessException extends Error {}
+class InvalidPasswordException extends Error {
+	constructor(message = null){
+		super(message)
+		this.name = 'InvalidPasswordException'
+	}
+}
+class UnableProcessException extends Error {
+	constructor(message = null){
+		super(message)
+		this.name = 'UnableProcessException'
+	}
+}
 
 const executeCommand = async (command, args, options = {}) => {
     const child = spawn(command, args, { ...options });
