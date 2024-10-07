@@ -108,7 +108,7 @@ const runPDFBox = async (filepath, _options) => {
 const runTika = async (filepath, _commandOption, options) => {
     const maxBuffer = (options && options.maxBuffer) || 1024 * 2000;
     const commandOption = _commandOption || 'html';
-    const command = 'java';
+    const command = options.javaPath || 'java';
     const commandArgs = ['-jar', `${constants.DIRECTORY.VENDOR + constants.VENDOR_TIKA_JAR}`, `--${commandOption}`];
     const env = {}
 
