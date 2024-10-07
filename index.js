@@ -81,7 +81,7 @@ const runPDFBox = async (filepath, _options) => {
     await fse.copy(filepath, copyFilePath);
 
     const maxBuffer = options.maxBuffer || 1024 * 2000;
-    const command = 'java';
+    const command = options.javaPath || 'java';
     const commandArgs = ['-jar', `${constants.DIRECTORY.VENDOR + constants.VENDOR_PDF_BOX_JAR}`, 'PDFToImage', '-imageType', options.imageType, '-startPage', options.page, '-endPage', options.page, copyFilePath];
     await executeCommand(command, commandArgs, { maxBuffer });
 
